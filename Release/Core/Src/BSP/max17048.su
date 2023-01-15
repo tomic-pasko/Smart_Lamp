@@ -1,0 +1,2 @@
+max17048.c:18:6:init_MAX17048	0	static
+max17048.c:25:6:get_MAX17048_vcell_value	32	static

@@ -1,0 +1,6 @@
+ble_func.c:21:6:one_led_on_fp	8	static
+ble_func.c:27:6:vcell_fp	56	static
+ble_func.c:48:6:all_led_off_fp	8	static
+ble_func.c:54:6:two_led_on_fp	8	static
+ble_func.c:61:6:vcell_timer_fp	64	static
+ble_func.c:115:6:led_array_fp	16	static

@@ -1,0 +1,2 @@
+led_gpio.c:15:6:led_gpio_set	8	static
+led_gpio.c:64:6:led_gpio_all_off	8	static

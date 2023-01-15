@@ -1,0 +1,3 @@
+timers.c:14:6:timer_on	8	static
+timers.c:31:6:timer_off	8	static
+timers.c:37:16:is_timer_on	0	static

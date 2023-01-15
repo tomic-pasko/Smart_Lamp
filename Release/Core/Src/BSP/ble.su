@@ -1,0 +1,2 @@
+ble.c:23:6:ble_init	0	static
+ble.c:57:19:ble_handler	48	static
