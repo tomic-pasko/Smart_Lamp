@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
+#include "rtc.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -37,6 +38,9 @@
 #include <string.h>
 #include <stdio.h>
 
+#include <BSP/led_pwm.h>
+#include "BSP/ble_func.h"
+#include "BSP/pwr_modes.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -104,9 +108,12 @@ int main(void)
   MX_TIM6_Init();
   MX_TIM7_Init();
   MX_USART1_UART_Init();
+  MX_TIM3_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
-  led_gpio_set(GREEN, LED_ON);
+  // below line commented because same PINs are used for PWM
+  // led_gpio_set(GREEN, LED_ON);
 
   // BSP layer MAX17048 sensor init
   init_MAX17048(&hi2c1, MAX17048_I2C_ADDR, 20);
@@ -114,6 +121,10 @@ int main(void)
   // BSP layer BLE init
   ble_init(&huart1, BLE_MAX_EXPECTED_RX_HEADER_BYTES, TIMEOUT_MS);
 
+  // BSP layer LED PWM init
+  led_pwm_init(&htim3, 250);
+
+  //
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -143,6 +154,19 @@ int main(void)
 
 	  }
 
+	  // Ulazak u STOP mode
+	  if (is_phone_connected() == MOBILE_NOT_CONNECTED &&
+			  (get_led_red() == PWM_LED_OFF) &&
+			  (get_led_green() == PWM_LED_OFF) &&
+			  (get_led_blue() == PWM_LED_OFF) &&
+			  (get_led_white() == PWM_LED_OFF))
+	  {
+
+		  pwr_modes_stop_preparation();
+		  pwr_modes_enter_stop();
+
+	  }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -163,11 +187,16 @@ void SystemClock_Config(void)
   /** Configure the main internal regulator output voltage
   */
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+  /** Configure LSE Drive Capability
+  */
+  HAL_PWR_EnableBkUpAccess();
+  __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE|RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -186,9 +215,11 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_I2C1;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_I2C1
+                              |RCC_PERIPHCLK_RTC;
   PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
   PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();

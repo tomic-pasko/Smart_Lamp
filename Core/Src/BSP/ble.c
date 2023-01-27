@@ -47,9 +47,33 @@ void ble_init(UART_HandleTypeDef* uart, uint8_t rx_header_size, uint32_t timeout
 	ble_rx_all.vcell_timer.msg_id = BATT_TIMER_MSG_ID;
 	ble_rx_all.vcell_timer.func_p = vcell_timer_fp;
 
+
+	// if PWM not used uncomment following 3 lines
+	// ble_rx_all.led_array.cmd_id = LED_CMD_ID;
+	// ble_rx_all.led_array.msg_id = TIMER_LED_MSG_ID;
+	// ble_rx_all.led_array.func_p = led_array_fp;
+
+	// if PWM not used comment following 6 lines
 	ble_rx_all.led_array.cmd_id = LED_CMD_ID;
-	ble_rx_all.led_array.msg_id = TIMER_LED_MSG_ID;
+	ble_rx_all.led_array.msg_id = TWO_PWM_LED_TIMER_MSG_ID;
 	ble_rx_all.led_array.func_p = led_array_fp;
+
+
+	ble_rx_all.one_pwm_led_on.cmd_id = LED_CMD_ID;
+	ble_rx_all.one_pwm_led_on.msg_id = ONE_PWM_LED_MSG_ID;
+	ble_rx_all.one_pwm_led_on.func_p = one_pwm_led_on_fp;
+
+	ble_rx_all.rtc_set_time.cmd_id = LED_CMD_ID;
+	ble_rx_all.rtc_set_time.msg_id = RTC_MSG_ID;
+	ble_rx_all.rtc_set_time.func_p = rtc_set_time_fp;
+
+	ble_rx_all.rtc_set_alarm_a_b.cmd_id = LED_CMD_ID;
+	ble_rx_all.rtc_set_alarm_a_b.msg_id = RTC_ALARM_A_B_MSG_ID;
+	ble_rx_all.rtc_set_alarm_a_b.func_p = rtc_set_alarm_a_b_fp;
+
+	ble_rx_all.rtc_set_led.cmd_id = LED_CMD_ID;
+	ble_rx_all.rtc_set_led.msg_id = RTC_LED_MSG_ID;
+	ble_rx_all.rtc_set_led.func_p = rtc_set_led_fp;
 
 }
 
@@ -57,6 +81,11 @@ void ble_init(UART_HandleTypeDef* uart, uint8_t rx_header_size, uint32_t timeout
 HAL_StatusTypeDef ble_handler()
 {
 	if (ble.init_flag != 1)
+	{
+		return HAL_ERROR;
+	}
+
+	if ( is_phone_connected() == MOBILE_NOT_CONNECTED)
 	{
 		return HAL_ERROR;
 	}

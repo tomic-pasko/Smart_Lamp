@@ -27,6 +27,7 @@
 #include "BSP/led_gpio.h"
 #include "BSP/timers.h"
 #include "BSP/ble_func.h"
+#include "BSP/led_pwm.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -62,6 +63,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern RTC_HandleTypeDef hrtc;
 extern TIM_HandleTypeDef htim6;
 extern TIM_HandleTypeDef htim7;
 /* USER CODE BEGIN EV */
@@ -149,6 +151,34 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles RTC global interrupt through EXTI lines 17, 19 and 20 and LSE CSS interrupt through EXTI line 19.
+  */
+void RTC_IRQHandler(void)
+{
+  /* USER CODE BEGIN RTC_IRQn 0 */
+
+  /* USER CODE END RTC_IRQn 0 */
+  HAL_RTC_AlarmIRQHandler(&hrtc);
+  /* USER CODE BEGIN RTC_IRQn 1 */
+
+  /* USER CODE END RTC_IRQn 1 */
+}
+
+/**
+  * @brief This function handles EXTI line 4 to 15 interrupts.
+  */
+void EXTI4_15_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI4_15_IRQn 0 */
+
+  /* USER CODE END EXTI4_15_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
+  /* USER CODE BEGIN EXTI4_15_IRQn 1 */
+
+  /* USER CODE END EXTI4_15_IRQn 1 */
+}
+
+/**
   * @brief This function handles TIM6 global interrupt and DAC1/DAC2 underrun error interrupts.
   */
 void TIM6_DAC_IRQHandler(void)
@@ -188,13 +218,27 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	else if (htim->Instance == TIM7)
 	{
-		led_gpio_set(RED, LED_OFF);
-		led_gpio_set(GREEN, LED_OFF);
-		led_gpio_set(BLUE, LED_OFF);
-		led_gpio_set(WHITE, LED_OFF);
+		// below lines commented because same PINs are used for PWM
+		// led_gpio_set(RED, LED_OFF);
+		// led_gpio_set(GREEN, LED_OFF);
+		// led_gpio_set(BLUE, LED_OFF);
+		// led_gpio_set(WHITE, LED_OFF);
 
-		led_gpio_set(led_array[counter], LED_ON);
-		counter++;
+
+		// if PWM not used comment from line 214 - 222
+		HAL_TIM_PWM_Stop(led_pwm.tim3, LED_RED_CHANNEL);
+		HAL_TIM_PWM_Stop(led_pwm.tim3, LED_GREEN_CHANNEL);
+		HAL_TIM_PWM_Stop(led_pwm.tim3, LED_BLUE_CHANNEL);
+		HAL_TIM_PWM_Stop(led_pwm.tim3, LED_WHITE_CHANNEL);
+
+		led_pwm.red_led = PWM_LED_OFF;
+		led_pwm.green_led = PWM_LED_OFF;
+		led_pwm.blue_led = PWM_LED_OFF;
+		led_pwm.white_led = PWM_LED_OFF;
+
+		led_pwm_set(led_array[counter], led_array[counter + 1]);
+		// if PWM not used, counter = counter + 1
+		counter = counter + 2;
 
 		if (counter > 3)
 		{
@@ -204,6 +248,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 
 
+}
+
+void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
+{
+	one_pwm_led_on_fp(&led_alarm[0]);
+}
+
+void HAL_RTCEx_AlarmBEventCallback(RTC_HandleTypeDef *hrtc)
+{
+	all_led_off_fp(&led_alarm[0]);
 }
 
 /* USER CODE END 1 */

@@ -66,6 +66,7 @@ void led_gpio_all_off(void)
 	//turn off led array
 	timer_off(&htim7);
 
+
 	HAL_GPIO_WritePin(LED_RED_PORT, LED_RED_PIN, LED_OFF);
 	HAL_GPIO_WritePin(LED_GREEN_PORT, LED_GREEN_PIN, LED_OFF);
 	HAL_GPIO_WritePin(LED_BLUE_PORT, LED_BLUE_PIN, LED_OFF);

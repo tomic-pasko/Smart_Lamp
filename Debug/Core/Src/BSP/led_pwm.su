@@ -1,0 +1,7 @@
+led_pwm.c:15:6:led_pwm_init	16	static
+led_pwm.c:26:6:led_pwm_set	24	static
+led_pwm.c:103:6:led_pwm_all_off	8	static
+led_pwm.c:120:14:get_led_red	8	static
+led_pwm.c:126:14:get_led_green	8	static
+led_pwm.c:132:14:get_led_blue	8	static
+led_pwm.c:138:14:get_led_white	8	static

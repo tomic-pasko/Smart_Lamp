@@ -17,17 +17,24 @@
 #define MSG_LEN  3
 
 //Cmd ID
-#define LED_CMD_ID 0xAF
-#define BATT_CMD_ID 0xBC
+#define LED_CMD_ID    0xAF
+#define BATT_CMD_ID   0xBC
 
 //Msg ID
-#define ONE_LED_MSG_ID     0x0701
-#define TWO_LED_MSG_ID     0x0702
-#define TIMER_LED_MSG_ID   0x0703
-#define ALL_LED_OFF_MSG_ID 0x0704
+#define ONE_PWM_LED_MSG_ID       0x0601
+#define TWO_PWM_LED_TIMER_MSG_ID 0x0603
 
-#define BATT_MSG_ID        0x0801
-#define BATT_TIMER_MSG_ID  0x0802
+#define ONE_LED_MSG_ID           0x0701
+#define TWO_LED_MSG_ID           0x0702
+#define TIMER_LED_MSG_ID         0x0703
+#define ALL_LED_OFF_MSG_ID       0x0704
+
+#define BATT_MSG_ID              0x0801
+#define BATT_TIMER_MSG_ID        0x0802
+
+#define RTC_MSG_ID               0x0A01
+#define RTC_ALARM_A_B_MSG_ID     0x0A02
+#define RTC_LED_MSG_ID           0x0A03
 
 /*********************************STRUCTURES****************************************/
 typedef struct

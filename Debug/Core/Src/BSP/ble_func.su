@@ -1,6 +1,11 @@
-ble_func.c:21:6:one_led_on_fp	16	static
-ble_func.c:27:6:vcell_fp	72	static
-ble_func.c:48:6:all_led_off_fp	16	static
-ble_func.c:54:6:two_led_on_fp	16	static
-ble_func.c:61:6:vcell_timer_fp	64	static
-ble_func.c:115:6:led_array_fp	24	static
+ble_func.c:27:9:is_phone_connected	8	static
+ble_func.c:37:6:one_led_on_fp	16	static
+ble_func.c:43:6:vcell_fp	72	static
+ble_func.c:64:6:all_led_off_fp	16	static
+ble_func.c:74:6:two_led_on_fp	16	static
+ble_func.c:81:6:vcell_timer_fp	64	static
+ble_func.c:135:6:led_array_fp	24	static
+ble_func.c:159:6:one_pwm_led_on_fp	16	static
+ble_func.c:165:6:rtc_set_time_fp	88	static
+ble_func.c:187:6:rtc_set_alarm_a_b_fp	160	static
+ble_func.c:220:6:rtc_set_led_fp	64	static
